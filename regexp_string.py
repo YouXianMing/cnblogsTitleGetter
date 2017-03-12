@@ -1,7 +1,24 @@
 import re
 
 
+class RegExpAbsModel:
+    """
+    用正则表达式处理文本来初始化对象,此类为抽象类
+    """
+
+    def __init__(self, match_string):
+        self.match_string = match_string
+
+    def convert(self):
+        """
+        由子类重载,用来处理match_string,正则表达式将其转换成各种属性
+        :return:
+        """
+        return self
+
+
 class RegExpString:
+
     def __init__(self, match_string):
 
         self._match_string = match_string
@@ -34,9 +51,6 @@ class RegExpString:
         :return: RegExpString对象
         """
 
-        # 验证正则表达式是否合法,不合法则报错
-        RegExpString._check_pattern(pattern)
-
         # 开始匹配
         result = re.search(pattern, self._match_string, flags)
 
@@ -55,9 +69,6 @@ class RegExpString:
         :return: RegExpString对象
         """
 
-        # 验证正则表达式是否合法,不合法则报错
-        RegExpString._check_pattern(pattern)
-
         # 获取匹配的数组
         self._item_list = None
         item_list = re.findall(pattern, self._match_string, flags)
@@ -65,6 +76,33 @@ class RegExpString:
             self._item_list = item_list
 
         return self
+
+    @staticmethod
+    def check_pattern_valid(pattern):
+        """
+        验证正则表达式是否合法
+        :param pattern: 正则表达式
+        :return: 合法返回True,不合法返回False
+        """
+
+        is_valid = None
+
+        try:
+            re.compile(pattern)
+            is_valid = True
+        except re.error:
+            is_valid = False
+
+        return is_valid
+
+    def get_item_list_with_pattern(self, pattern):
+        """
+        以 re.I | re.M | re.S 获取匹配数据的数组
+        :param pattern: 正则表达式
+        :return: 匹配上则返回数组,没有匹配上,则返回None
+        """
+
+        return self.find_all(pattern, re.I | re.M | re.S).item_list
 
     # Internal method
     # ---------------------------------------
