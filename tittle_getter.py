@@ -14,12 +14,12 @@ class TittleGetter:
 
     def __init__(self, username):
 
-        self._user_name = username
-        self._title_object_list = None
+        self.__user_name = username
+        self.__title_object_list = None
 
     @property
     def title_object_list(self):
-        return self._title_object_list
+        return self.__title_object_list
 
     @property
     def user_exist(self):
@@ -30,7 +30,7 @@ class TittleGetter:
 
         is_user_exist = True
 
-        r = requests.get("https://home.cnblogs.com/u/" + self._user_name)
+        r = requests.get("https://home.cnblogs.com/u/" + self.__user_name)
         if r.ok:
 
             # 请求通了,但并不一定存在这个用户
@@ -50,12 +50,12 @@ class TittleGetter:
         :return: TittleGetter对象
         """
 
-        self._title_object_list = []
+        self.__title_object_list = []
 
         # 开始逐个网页分析,直到网页文章数目为0就停止
         for i in range(1, 10000):
 
-            web_url_string = "http://www.cnblogs.com/%s/default.html?page=%d" % (self._user_name, i)
+            web_url_string = "http://www.cnblogs.com/%s/default.html?page=%d" % (self.__user_name, i)
             itemCount = self.__analyse_url(web_url_string)
             if itemCount <= 0:
                 break
@@ -97,7 +97,7 @@ class TittleGetter:
                             # 文章数目统计
                             item_count += 1
                             print("%s %s" % (title, url))
-                            self._title_object_list.append(TittleObject(title, url))
+                            self.__title_object_list.append(TittleObject(title, url))
 
                 if len(items_list):
                     print("<该页面有 %s 条数据>" % item_count)
