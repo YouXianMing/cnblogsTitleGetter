@@ -3,7 +3,7 @@ import re
 
 class RegExpAbsModel:
     """
-    用正则表达式处理文本来初始化对象,此类为抽象类
+    用正则表达式来将字符串转换成对象,便于操作
     """
 
     def __init__(self, match_string):
@@ -26,6 +26,9 @@ class RegExpString:
         # [字符串] 先调用了search_with_pattern之后再获取这个值,匹配成功返回字符串,匹配失败,返回None
         self.__search_result = None
 
+        # [字符串] 先调用了replace_with_pattern之后再获取这个值,匹配成功返回字符串,匹配失败,返回None
+        self.__replace_result = None
+
         # [字符串数组] 先调用find_all最后再获这个值,匹配成功返回字符串数组,匹配失败,返回None
         self.__item_list = None
 
@@ -37,11 +40,34 @@ class RegExpString:
         return self.__search_result
 
     @property
+    def replace_result(self):
+        return self.__replace_result
+
+    @property
     def item_list(self):
         return self.__item_list
 
     # Public method
     # ---------------------------------------
+
+    def replace_with_pattern(self, pattern, replace_string, flags=0):
+        """
+        用正则表达式替换
+        :param pattern: 正则表达式
+        :param replace_string: 替换的字符串
+        :param flags: 匹配方式
+        :return: RegExpString对象
+        """
+
+        # 开始替换
+        result = re.sub(repl=replace_string, pattern=pattern, flags=flags, string=self.__match_string)
+
+        # 获取替换结果
+        self.__replace_result = None
+        if len(result):
+            self.__replace_result = result
+
+        return self
 
     def search_with_pattern(self, pattern, flags=0):
         """
